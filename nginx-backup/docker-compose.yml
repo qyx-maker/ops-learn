@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: my-nginx:1.1
+    container_name: nginx
+    restart: always
+    network_mode: host
+    volumes:
+     - /etc/localtime:/etc/localtime:ro
+     - /opt/nginx-backup/tomcat.conf:/etc/nginx/conf.d/tomcat.conf:ro
+     - /opt/nginx-backup/nginx.conf:/etc/nginx/nginx.conf:ro
+     - /opt/nginx-backup/default.conf:/etc/nginx/conf.d/default.conf:ro
