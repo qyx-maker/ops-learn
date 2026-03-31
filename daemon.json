@@ -1,0 +1,27 @@
+{
+	"default-ipc-mode": "shareable",
+	"data-root": "/data/docker",
+	"exec-opts": ["native.cgroupdriver=systemd"],
+	"log-driver": "json-file",
+	"log-opts": {
+		"max-size": "100m",
+		"max-file": "50"
+	},
+	"registry-mirrors": [
+		"https://docker.1ms.run",
+		"https://func.ink",
+		"https://proxy.1panel.live",
+		"https://docker-0.unsee.tech",
+		"https://docker.zhai.cm",
+		"https://a.ussh.net",
+		"https://docker.melikeme.cn",
+		"https://docker.hlmirror.com",
+		"https://docker.xiaogenban1993.com",
+		"https://docker.1panel.top",
+		"https://docker.kejilion.pro",
+		"https://dockerpull.cn",
+		"https://docker.xuanyuan.me",
+		"https://docker.anye.in",
+		"https://hub.fast360.xyz"
+	]
+}
