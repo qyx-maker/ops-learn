@@ -1,13 +1,66 @@
 version: '3.8'
 
 services:
+  # Elasticsearch
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      # 限制 ES 内存：如果总内存 4G，给 ES 1G；如果总内存 2G，给 ES 512M
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g" 
+    deploy:
+      resources:
+        limits:
+          memory: 2G # 限制容器内存上限
+
+
+  # Logstash
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.12.0
+    container_name: logstash
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+    depends_on:
+      - elasticsearch
+
+  # Kibana
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.12.0
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - I18N_LOCALE=zh-CN # 顺便改成中文界面
+    depends_on:
+      - elasticsearch
+    restart: always
+  # Nginx (业务容器)
   nginx:
     image: my-nginx:1.0
     container_name: nginx
     restart: always
     network_mode: host
+    logging:
+      driver: "json-file"
+      options:
+        tag: "{{.Name}}"
     volumes:
      - /etc/localtime:/etc/localtime:ro
-     - /opt/nginx_master/tomcat.conf:/etc/nginx/conf.d/tomcat.conf:ro
-     - /opt/nginx_master/nginx.conf:/etc/nginx/nginx.conf:ro
-     - /opt/nginx_master/default.conf:/etc/nginx/conf.d/default.conf:ro
+     - ./tomcat.conf:/etc/nginx/conf.d/tomcat.conf:ro,Z
+     - ./nginx.conf:/etc/nginx/nginx.conf:ro,Z
+     - ./default.conf:/etc/nginx/conf.d/default.conf:ro,Z
+  # Filebeat (日志采集)
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.12.0
+    container_name: filebeat
+    user: root
+    volumes:
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - logstash
+
