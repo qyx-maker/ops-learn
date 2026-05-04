@@ -39,7 +39,7 @@ services:
     restart: always
   # Nginx (业务容器)
   nginx:
-    image: my-nginx:1.0
+    image: my-nginx:1.1
     container_name: nginx
     restart: always
     network_mode: host
