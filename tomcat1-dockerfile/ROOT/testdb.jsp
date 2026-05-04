@@ -7,8 +7,8 @@
 <body>
 <h1>数据库连接测试</h1>
 <%
-    String url = "jdbc:mysql://192.168.211.136:3306/testdb?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
-    String user = "appuser";
+    String url = "jdbc:mysql://192.168.211.200:3306/mydb?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
+    String user = "root";
     String password = "AppPass123!";
     Connection conn = null;
     Statement stmt = null;
