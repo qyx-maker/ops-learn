@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   tomcat2:
-    image: my-tomcat:1.7
+    image: my-tomcat:2.2
     container_name: tomcat1
     restart: always
     ports:
